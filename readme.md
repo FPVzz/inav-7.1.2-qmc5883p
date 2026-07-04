@@ -1,3 +1,73 @@
+# INAV 7.1.2 + QMC5883P Backport
+
+This repository is based on the official **INAV 7.1.2** release with a single functional change: **the QMC5883P magnetometer driver has been backported** from a newer INAV release.
+
+## Why?
+
+I use a **Matek F411-WTE**, which is officially supported up to **INAV 7.1.2**. Newer INAV releases dropped F411 support due to flash size limitations.
+
+My GPS module is a **TBS M10Q**, which includes a **QMC5883P** magnetometer. The QMC5883P is **not supported in INAV 7.1.2**, so the compass could not be detected.
+
+This repository backports the upstream QMC5883P driver while otherwise keeping the firmware identical to INAV 7.1.2.
+
+## Building
+
+Clone the repository and build the firmware:
+
+```bash
+git clone <this repository>
+cd inav
+
+cmake -B build
+cmake --build build --target MATEKF411TE
+```
+
+The generated firmware will be placed in:
+
+```text
+build/bin/
+```
+
+## Flashing
+
+1. Open **INAV Configurator 7.1.2**.
+2. Open the **Firmware Flasher** tab.
+3. Enable **Load firmware [Local]**.
+4. Select the `.hex` file from `build/bin/`.
+5. Click **Flash Firmware**.
+
+## Usage
+
+After flashing:
+
+1. Set the magnetometer to **QMC5883P** (or try **AUTO** if preferred).
+2. Save and reboot.
+3. Perform a full magnetometer calibration before flying.
+
+## Disclaimer
+
+This firmware has **only been tested on a Matek F411-WTE with a TBS M10Q (QMC5883P)**. Although the backported driver is generic, I cannot guarantee it works correctly on other flight controllers or targets.
+
+If you want to use it on another target, simply replace `MATEKF411TE` in the build command with your desired target. For example:
+
+```bash
+cmake --build build --target YOUR_TARGET
+```
+
+You can list the available build targets with:
+
+```bash
+cmake --build build --target help
+```
+
+or browse the available targets under:
+
+```text
+src/main/target/
+```
+
+This is an unofficial backport and is **not supported by the INAV project**.
+
 # INAV - navigation capable flight controller
 
 # F411 PSA
